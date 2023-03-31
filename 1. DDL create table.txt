@@ -1,0 +1,46 @@
+
+CREATE TABLE karyawan (
+	id bigint NOT NULL,
+	nama varchar(100) NOT NULL,
+	jk varchar(20) NOT NULL,
+	dob date NULL,
+	status varchar(20) NOT NULL,
+	alamat text,
+	CONSTRAINT karyawan_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE detail_karyawan (
+	id bigint NOT NULL,
+	id_karyawan INT NOT NULL,
+	nik varchar(100) NOT NULL,
+	npwp varchar(100) NOT NULL,
+  	CONSTRAINT fk_karyawan FOREIGN KEY(id_karyawan) REFERENCES karyawan(id)
+);
+
+CREATE TABLE training (
+	id bigint NOT NULL,
+	tema varchar(200) NOT NULL,
+	nama_pengajar varchar(100) NOT null,
+	CONSTRAINT training_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE karyawan_training (
+	id bigint NOT NULL,
+	karyawan_id INT NOT NULL,
+	training_id INT NOT NULL,
+	tanggal_training date NULL,
+  	CONSTRAINT fk_karyawan FOREIGN KEY(karyawan_id) REFERENCES karyawan(id),
+  	CONSTRAINT fk_training FOREIGN KEY(training_id) REFERENCES training(id)
+);
+
+CREATE TABLE rekening (
+	id bigint NOT NULL,
+	karyawan_id INT NOT NULL,
+	nama varchar(200) NOT NULL,
+	jenis varchar(200) NOT NULL,
+	nomor varchar(200) NOT NULL,
+	deleted_date timestamp,
+  	CONSTRAINT fk_karyawan FOREIGN KEY(karyawan_id) REFERENCES karyawan(id)
+);
+
+

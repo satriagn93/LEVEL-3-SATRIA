@@ -1,0 +1,42 @@
+CREATE OR REPLACE PROCEDURE updatekaryawan(
+	INOUT vnama character varying,
+	INOUT vjk character varying,
+	INOUT vdob date,
+	INOUT valamat text,
+	INOUT vstatus character varying,
+	INOUT vnik character varying,
+	INOUT vnpwp character varying,
+	INOUT vid integer,
+	INOUT eror_desc varchar,
+	INOUT eror_code integer
+)
+
+LANGUAGE plpgsql
+AS $procedure$
+begin
+
+if vid is null Then
+	raise notice 'data is null';
+	eror_desc = 'data is null';
+	eror_code = 404;
+return;
+else
+	raise notice 'update succesfully';
+end if; 
+
+update karyawan
+ set nama = vnama, jk = vjk, dob = vdob, status = vstatus, alamat = valamat
+ where id = vid returning id into vid;
+
+update detail_karyawan
+ set nik = vnik, npwp = vnpwp
+ where id_karyawan = vid returning id_karyawan into vid;
+
+	eror_desc = 'data sucessfully update';
+	eror_code = 200;
+commit;
+END;
+$procedure$
+;
+
+call updatekaryawan('Satria Aja', 'Pria', '1993-10-26', 'Bandar Lampung', 'Aktif','1234567','321123', 11, null, null);

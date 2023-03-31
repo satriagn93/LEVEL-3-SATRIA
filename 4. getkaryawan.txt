@@ -1,0 +1,15 @@
+CREATE OR REPLACE FUNCTION getkaryawan(rqid integer)
+RETURNS TABLE(resid bigint, resnama character varying, resjk 
+character varying, resdob date, resstatus character varying, resalamat text)
+LANGUAGE plpgsql
+AS $function$
+BEGIN
+ RETURN QUERY
+ select k.id, k.nama, k.jk, k.dob, k.status, k.alamat
+ FROM karyawan AS k
+ WHERE id = rqid;
+END;
+$function$
+;
+
+select * from getkaryawan(9);

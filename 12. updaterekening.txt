@@ -1,0 +1,28 @@
+CREATE OR REPLACE PROCEDURE updaterekening(INOUT vkaryawanid integer, INOUT vnama character varying, INOUT vjenis character varying
+, INOUT vnomor character varying,INOUT vid integer, INOUT eror_desc varchar, INOUT eror_code integer
+)
+LANGUAGE plpgsql
+AS $procedure$
+begin
+
+if vid is null Then
+	raise notice 'data is null';
+	eror_desc = 'data is null';
+	eror_code = 404;
+return;
+else
+	raise notice 'update succesfully';
+end if; 
+
+update rekening
+ set karyawan_id = vkaryawanid, nama = vnama, jenis = vjenis, nomor = vnomor
+ where id = vid returning id into vid;
+	eror_desc = 'berrhasil update rekening';
+	eror_code = 200;
+
+commit;
+END;
+$procedure$
+;
+
+call updaterekening(13, 'Rekeningku 123', 'Syariah', '1112993388', 2, null, null);

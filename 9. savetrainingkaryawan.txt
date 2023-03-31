@@ -1,0 +1,30 @@
+CREATE OR REPLACE PROCEDURE savetrainingkaryawan(
+INOUT reqid integer, INOUT reqkaryawanid integer, INOUT reqtrainingid integer, INOUT reqtanggal date, INOUT reserordesc varchar, INOUT reserorcode integer)
+LANGUAGE plpgsql
+AS $procedure$
+ begin
+ if reqkaryawanid is null Then
+ raise notice 'id karyawan kosong';
+ reserordesc = 'id karyawan wajib diisi';
+ reserorcode = 404;
+ return;
+ else
+ raise notice 'id karyawan ada';
+ end if;
+ 
+ INSERT into karyawan_training
+ (id,karyawan_id ,training_id, tanggal_training) 
+ SELECT nextval('trainingkaryawan_id_seq'),
+ reqkaryawanid,
+ reqtrainingid,
+ reqtanggal
+ RETURNING id INTO reqid;
+ 
+ reserordesc = 'sukses';
+ reserorcode = 200;
+ commit;
+ END;
+ $procedure$
+;
+
+call savetrainingkaryawan(null, 9, 2, '2023-03-03', null, null);

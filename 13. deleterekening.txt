@@ -1,0 +1,21 @@
+CREATE OR REPLACE PROCEDURE deleterekening(rqid integer,INOUT eror_desc varchar, INOUT eror_code integer)
+LANGUAGE plpgsql
+AS $procedure$
+begin
+if rqid is null Then
+ raise notice 'id  kosong';
+ eror_desc = 'id  wajib diisi';
+ eror_code = 404;
+ return;
+ else
+ raise notice 'id rekening ada';
+ end if;
+delete from rekening where id = rqid;
+eror_desc = 'sukses';
+eror_code = '200';
+ commit;
+END;
+$procedure$
+;
+
+call deleterekening(1, null, null);

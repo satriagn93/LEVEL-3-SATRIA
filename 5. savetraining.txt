@@ -1,0 +1,29 @@
+CREATE OR REPLACE PROCEDURE savetraining(
+INOUT reqid integer, INOUT reqtema character varying, INOUT reqnama character varying, INOUT reserordesc varchar, INOUT reserorcode integer)
+LANGUAGE plpgsql
+AS $procedure$
+ begin
+ if reqnama is null Then
+ raise notice 'nama kosong';
+ reserordesc = 'nama wajib diisi';
+ reserorcode = 404;
+ return;
+ else
+ raise notice 'nama ada';
+ end if;
+ 
+ INSERT into training
+ (id,tema,nama_pengajar) 
+ SELECT nextval('training_id_seq'),
+ reqtema,
+ reqnama
+ RETURNING id INTO reqid;
+ 
+ reserordesc = 'sukses';
+ reserorcode = 200;
+ commit;
+ END;
+ $procedure$
+;
+
+call savetraining(null, 'Springboot', 'Springboot CRUD', null, null);

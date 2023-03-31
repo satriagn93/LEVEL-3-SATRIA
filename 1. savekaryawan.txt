@@ -1,0 +1,53 @@
+CREATE OR REPLACE PROCEDURE savekaryawan(
+	INOUT nama character varying,
+	INOUT jk character varying,
+	INOUT dob date,
+	INOUT alamat text,
+	INOUT status character varying,
+	INOUT nik character varying,
+	INOUT npwp character varying,
+	INOUT vid integer,
+	INOUT eror_desc varchar,
+	INOUT eror_code integer
+)
+
+LANGUAGE plpgsql
+AS $procedure$
+begin
+
+if nama is null or  jk is null or  nik is null Then
+	raise notice 'data is null';
+	eror_desc = 'data is null';
+	eror_code = 404;
+return;
+else
+	raise notice 'insert succesfully';
+end if; 
+
+INSERT into karyawan
+ (id,nama,jk,dob,status,alamat) 
+ SELECT nextval('karyawan_id_seq'),
+ nama,
+ jk,
+ dob,
+ status,
+ alamat
+ RETURNING id INTO vid;
+
+INSERT into detail_karyawan
+ (id,id_karyawan,nik,npwp) 
+ SELECT nextval('detailkaryawan_id_seq'),
+ vid,
+ nik,
+ npwp
+ RETURNING id INTO vid;
+
+	eror_desc = 'data berhasil disimpan';
+	eror_code = 200;
+
+commit;
+END;
+$procedure$
+;
+
+call savekaryawan('Satria', 'Pria', '1993-10-26', 'Bandar Lampung', 'Aktif','1234567','321123', null, null, null);

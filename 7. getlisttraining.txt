@@ -1,0 +1,23 @@
+CREATE OR REPLACE FUNCTION getlisttraining(rqnama character varying)
+RETURNS TABLE(resid integer, restema character varying, resnama character varying)
+LANGUAGE plpgsql
+AS $function$
+DECLARE
+ var_r record;
+BEGIN
+ FOR var_r IN(SELECT
+ id,
+ tema,
+ nama_pengajar
+ FROM training
+ WHERE nama_pengajar ILIKE rqnama) 
+ LOOP
+ resid := var_r.id ;
+ restema := var_r.tema ;
+ resnama := var_r.nama_pengajar ;
+ RETURN NEXT;
+ END LOOP;
+END; $function$
+;
+
+select * from getlisttraining('%Satria%')

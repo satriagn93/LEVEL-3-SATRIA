@@ -1,0 +1,33 @@
+CREATE OR REPLACE PROCEDURE updatetraining(
+	INOUT vid integer,
+	INOUT vtema character varying,
+	INOUT vnama character varying,
+	INOUT eror_desc varchar,
+	INOUT eror_code integer
+)
+
+LANGUAGE plpgsql
+AS $procedure$
+begin
+
+if vid is null Then
+	raise notice 'data is null';
+	eror_desc = 'data is null';
+	eror_code = 404;
+return;
+else
+	raise notice 'update succesfully';
+end if; 
+
+update training
+ set tema = vtema, nama_pengajar = vnama
+ where id = vid returning id into vid;
+ eror_desc = 'sukses';
+ eror_code = 200;
+
+commit;
+END;
+$procedure$
+;
+
+call updatetraining(2,'Java Spring Boot', 'Satria', null, null);

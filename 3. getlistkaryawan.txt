@@ -1,0 +1,30 @@
+CREATE OR REPLACE FUNCTION getlistkaryawan(rqnama character varying)
+RETURNS TABLE(resid integer, resnama character varying, resjk 
+character varying, resdob date, resstatus character varying, resalamat text)
+LANGUAGE plpgsql
+AS $function$
+DECLARE
+ var_r record;
+BEGIN
+ FOR var_r IN(SELECT
+ id,
+ nama,
+ jk,
+ dob,
+ status,
+ alamat
+ FROM karyawan
+ WHERE nama ILIKE rqNama) 
+ LOOP
+ resid := var_r.id ;
+ resnama := var_r.nama ;
+ resjk := var_r.jk ;
+ resdob := var_r.dob ;
+ resstatus := var_r.status ;
+ resalamat := var_r.alamat ;
+ RETURN NEXT;
+ END LOOP;
+END; $function$
+;
+
+select * from getlistkaryawan('%Satria%')

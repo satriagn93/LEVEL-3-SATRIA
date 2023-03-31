@@ -1,0 +1,14 @@
+CREATE OR REPLACE FUNCTION gettraining(rqid integer)
+RETURNS TABLE(resid bigint,restema character varying, resnama character varying)
+LANGUAGE plpgsql
+AS $function$
+BEGIN
+ RETURN QUERY
+ select t.id, t.tema, t.nama_pengajar
+ FROM training AS t
+ WHERE id = rqid;
+END;
+$function$
+;
+
+select * from gettraining(2);

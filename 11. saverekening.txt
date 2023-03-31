@@ -1,0 +1,33 @@
+CREATE OR REPLACE PROCEDURE saverekening(
+INOUT reqid integer,INOUT reqidkaryawan integer, 
+INOUT reqnama character varying, INOUT reqjenis character varying, INOUT reqnomor character varying, 
+INOUT eror_desc varchar, INOUT eror_code integer)
+LANGUAGE plpgsql
+AS $procedure$
+ begin
+ if reqnama is null Then
+ raise notice 'nama kosong';
+ eror_desc = 'nama wajib diisi';
+ eror_code = 404;
+ return;
+ else
+ raise notice 'nama ada';
+ end if;
+ 
+ INSERT into rekening
+ (id,karyawan_id,nama,jenis,nomor) 
+ SELECT nextval('rekening_id_seq'),
+ reqidkaryawan,
+ reqnama,
+ reqjenis,
+ reqnomor
+ RETURNING id INTO reqid;
+ 
+ eror_desc = 'sukses';
+ eror_code = 200;
+ commit;
+ END;
+ $procedure$
+;
+
+call saverekening(null, 9, 'Rekeningku', 'Syariah', '345633444', null, null);
